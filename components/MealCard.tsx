@@ -20,6 +20,7 @@ export function MealCard({ meal, onAddPress, style }: MealCardProps) {
         style={styles.image}
         contentFit="cover"
         transition={200}
+        web={{ fetchpriority: 'auto' }}
       />
       <View style={styles.content}>
         <View style={styles.textContainer}>

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-import { ArrowRight, Calendar, CheckCircle } from 'lucide-react-native';
+import { ArrowRight, Calendar, CircleCheck as CheckCircle } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 import { theme } from '@/constants/theme';
 import { Button } from '@/components/Button';
@@ -37,6 +37,7 @@ export default function HomeScreen() {
           source={{ uri: user?.profileImageUrl }}
           style={styles.profileImage}
           contentFit="cover"
+          web={{ fetchpriority: 'auto' }}
         />
       </View>
 
@@ -86,6 +87,7 @@ export default function HomeScreen() {
             source={{ uri: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' }}
             style={styles.noSubscriptionImage}
             contentFit="cover"
+            web={{ fetchpriority: 'auto' }}
           />
           <Text style={styles.noSubscriptionTitle}>No Active Subscription</Text>
           <Text style={styles.noSubscriptionText}>
