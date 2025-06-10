@@ -21,7 +21,7 @@ interface ButtonProps extends TouchableOpacityProps {
   textStyle?: TextStyle;
 }
 
-export function Button({
+export const Button = React.forwardRef<TouchableOpacity, ButtonProps>(({
   title,
   variant = 'primary',
   size = 'medium',
@@ -30,7 +30,7 @@ export function Button({
   style,
   textStyle,
   ...props
-}: ButtonProps) {
+}, ref) => {
   const getButtonStyles = () => {
     const baseStyle: ViewStyle = {
       ...styles.button,
@@ -71,6 +71,7 @@ export function Button({
 
   return (
     <TouchableOpacity
+      ref={ref}
       style={[getButtonStyles(), style]}
       disabled={disabled || loading}
       activeOpacity={0.8}
@@ -86,7 +87,9 @@ export function Button({
       )}
     </TouchableOpacity>
   );
-}
+});
+
+Button.displayName = 'Button';
 
 const variantStyles = {
   primary: {
