@@ -189,7 +189,7 @@ export default function SubscriptionScreen() {
                   source={{ uri: meal.imageUrl }}
                   style={styles.mealImage}
                   contentFit="cover"
-                  web={{ fetchpriority: 'auto' }}
+                  web={{ fetchPriority: 'auto' }}
                 />
                 <View style={styles.mealInfo}>
                   <Text style={styles.mealName}>{meal.name}</Text>
