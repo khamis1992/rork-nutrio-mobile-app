@@ -1,171 +1,210 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Switch,
+} from 'react-native';
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
-import { User, CreditCard, Calendar, Bell, CircleHelp as HelpCircle, LogOut, ChevronRight } from 'lucide-react-native';
-import { colors } from '@/constants/colors';
-import { theme } from '@/constants/theme';
-import { useAuthStore } from '@/stores/auth-store';
-import { useSubscriptionStore } from '@/stores/subscription-store';
+import { LinearGradient } from 'expo-linear-gradient';
+import {
+  Settings,
+  Bell,
+  Shield,
+  HelpCircle,
+  LogOut,
+  ChevronRight,
+  Edit3,
+  Award,
+  Target,
+  TrendingUp,
+} from 'lucide-react-native';
 
 export default function ProfileScreen() {
-  const router = useRouter();
-  const { user, logout } = useAuthStore();
-  const { subscription, cancelSubscription } = useSubscriptionStore();
+  const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
 
-  const handleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Logout", onPress: () => logout() }
-      ]
-    );
-  };
+  const stats = [
+    { label: 'Workouts', value: '127', icon: Target, color: '#10B981' },
+    { label: 'Streak', value: '12', icon: Award, color: '#F59E0B' },
+    { label: 'Calories', value: '45.2k', icon: TrendingUp, color: '#EF4444' },
+  ];
 
-  const handleCancelSubscription = () => {
-    Alert.alert(
-      "Cancel Subscription",
-      "Are you sure you want to cancel your subscription? You will lose access to all benefits immediately.",
-      [
-        { text: "No, Keep It", style: "cancel" },
-        { 
-          text: "Yes, Cancel", 
-          style: "destructive",
-          onPress: async () => {
-            await cancelSubscription();
-            Alert.alert("Subscription Cancelled", "Your subscription has been cancelled successfully.");
-          }
-        }
-      ]
-    );
-  };
+  const menuItems = [
+    {
+      title: 'Personal Information',
+      icon: Edit3,
+      color: '#10B981',
+      onPress: () => {},
+    },
+    {
+      title: 'Notifications',
+      icon: Bell,
+      color: '#F59E0B',
+      onPress: () => {},
+      hasSwitch: true,
+      switchValue: notificationsEnabled,
+      onSwitchChange: setNotificationsEnabled,
+    },
+    {
+      title: 'Privacy & Security',
+      icon: Shield,
+      color: '#8B5CF6',
+      onPress: () => {},
+    },
+    {
+      title: 'Help & Support',
+      icon: HelpCircle,
+      color: '#06B6D4',
+      onPress: () => {},
+    },
+    {
+      title: 'Settings',
+      icon: Settings,
+      color: '#6B7280',
+      onPress: () => {},
+    },
+  ];
+
+  const achievements = [
+    {
+      title: 'First Workout',
+      description: 'Completed your first workout',
+      icon: '🎯',
+      earned: true,
+    },
+    {
+      title: 'Week Warrior',
+      description: 'Worked out 5 times in a week',
+      icon: '🔥',
+      earned: true,
+    },
+    {
+      title: 'Consistency King',
+      description: 'Maintained a 30-day streak',
+      icon: '👑',
+      earned: false,
+    },
+  ];
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Image
-          source={{ uri: user?.profileImageUrl }}
-          style={styles.profileImage}
-          contentFit="cover"
-          web={{ fetchPriority: 'auto' }}
-        />
-        <Text style={styles.name}>{user?.name}</Text>
-        <Text style={styles.email}>{user?.email}</Text>
-      </View>
-
-      {subscription && (
-        <View style={styles.subscriptionCard}>
-          <Text style={styles.subscriptionTitle}>Current Subscription</Text>
-          <View style={styles.subscriptionDetails}>
-            <View style={styles.subscriptionItem}>
-              <Text style={styles.subscriptionLabel}>Plan:</Text>
-              <Text style={styles.subscriptionValue}>
-                {subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)}
-              </Text>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {/* Header */}
+      <LinearGradient
+        colors={['#10B981', '#059669']}
+        style={styles.header}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}>
+        <View style={styles.profileSection}>
+          <TouchableOpacity style={styles.profileImageContainer}>
+            <Image
+              source={{
+                uri: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
+              }}
+              style={styles.profileImage}
+            />
+            <View style={styles.editButton}>
+              <Edit3 size={16} color="#FFFFFF" />
             </View>
-            <View style={styles.subscriptionItem}>
-              <Text style={styles.subscriptionLabel}>Status:</Text>
-              <View style={styles.statusBadge}>
-                <Text style={styles.statusText}>
-                  {subscription.status.charAt(0).toUpperCase() + subscription.status.slice(1)}
-                </Text>
+          </TouchableOpacity>
+          <Text style={styles.userName}>Sarah Johnson</Text>
+          <Text style={styles.userEmail}>sarah.johnson@email.com</Text>
+        </View>
+
+        {/* Stats */}
+        <View style={styles.statsContainer}>
+          {stats.map((stat, index) => {
+            const IconComponent = stat.icon;
+            return (
+              <View key={index} style={styles.statItem}>
+                <IconComponent size={20} color="#FFFFFF" />
+                <Text style={styles.statValue}>{stat.value}</Text>
+                <Text style={styles.statLabel}>{stat.label}</Text>
               </View>
-            </View>
-            <View style={styles.subscriptionItem}>
-              <Text style={styles.subscriptionLabel}>Gym Access:</Text>
-              <Text style={styles.subscriptionValue}>
-                {subscription.includesGym ? 'Included' : 'Not Included'}
-              </Text>
-            </View>
-            <View style={styles.subscriptionItem}>
-              <Text style={styles.subscriptionLabel}>Expires:</Text>
-              <Text style={styles.subscriptionValue}>
-                {new Date(subscription.endDate).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity 
-            style={styles.cancelButton}
-            onPress={handleCancelSubscription}
-          >
-            <Text style={styles.cancelButtonText}>Cancel Subscription</Text>
-          </TouchableOpacity>
+            );
+          })}
         </View>
-      )}
+      </LinearGradient>
 
+      {/* Achievements */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Account Settings</Text>
-        <View style={styles.menuCard}>
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <User size={20} color={colors.primary} />
+        <Text style={styles.sectionTitle}>Achievements</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {achievements.map((achievement, index) => (
+            <View
+              key={index}
+              style={[
+                styles.achievementCard,
+                !achievement.earned && styles.achievementCardLocked,
+              ]}>
+              <Text style={styles.achievementIcon}>{achievement.icon}</Text>
+              <Text
+                style={[
+                  styles.achievementTitle,
+                  !achievement.earned && styles.achievementTitleLocked,
+                ]}>
+                {achievement.title}
+              </Text>
+              <Text
+                style={[
+                  styles.achievementDescription,
+                  !achievement.earned && styles.achievementDescriptionLocked,
+                ]}>
+                {achievement.description}
+              </Text>
+              {achievement.earned && <View style={styles.achievementBadge} />}
             </View>
-            <Text style={styles.menuText}>Edit Profile</Text>
-            <ChevronRight size={20} color={colors.textLight} />
-          </TouchableOpacity>
-          
-          <View style={styles.divider} />
-          
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <CreditCard size={20} color={colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Payment Methods</Text>
-            <ChevronRight size={20} color={colors.textLight} />
-          </TouchableOpacity>
-          
-          <View style={styles.divider} />
-          
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <Calendar size={20} color={colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Meal History</Text>
-            <ChevronRight size={20} color={colors.textLight} />
-          </TouchableOpacity>
-          
-          <View style={styles.divider} />
-          
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <Bell size={20} color={colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Notifications</Text>
-            <ChevronRight size={20} color={colors.textLight} />
-          </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* Menu Items */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Settings</Text>
+        <View style={styles.menuContainer}>
+          {menuItems.map((item, index) => {
+            const IconComponent = item.icon;
+            return (
+              <TouchableOpacity
+                key={index}
+                style={styles.menuItem}
+                onPress={item.onPress}>
+                <View style={styles.menuItemLeft}>
+                  <View style={[styles.menuIcon, { backgroundColor: item.color + '20' }]}>
+                    <IconComponent size={20} color={item.color} />
+                  </View>
+                  <Text style={styles.menuItemTitle}>{item.title}</Text>
+                </View>
+                <View style={styles.menuItemRight}>
+                  {item.hasSwitch ? (
+                    <Switch
+                      value={item.switchValue}
+                      onValueChange={item.onSwitchChange}
+                      trackColor={{ false: '#F3F4F6', true: '#10B981' }}
+                      thumbColor="#FFFFFF"
+                    />
+                  ) : (
+                    <ChevronRight size={20} color="#9CA3AF" />
+                  )}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
 
+      {/* Logout */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Support</Text>
-        <View style={styles.menuCard}>
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <HelpCircle size={20} color={colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Help & Support</Text>
-            <ChevronRight size={20} color={colors.textLight} />
-          </TouchableOpacity>
-          
-          <View style={styles.divider} />
-          
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={handleLogout}
-          >
-            <View style={styles.menuIconContainer}>
-              <LogOut size={20} color={colors.error} />
-            </View>
-            <Text style={[styles.menuText, { color: colors.error }]}>Logout</Text>
-            <ChevronRight size={20} color={colors.textLight} />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.logoutButton}>
+          <LogOut size={20} color="#EF4444" />
+          <Text style={styles.logoutText}>Log Out</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* App Version */}
+      <View style={styles.footer}>
+        <Text style={styles.versionText}>NUTRIO v1.0.0</Text>
       </View>
     </ScrollView>
   );
@@ -174,112 +213,205 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    padding: theme.spacing.lg,
+    backgroundColor: '#F9FAFB',
   },
   header: {
+    paddingTop: 60,
+    paddingBottom: 32,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+  },
+  profileSection: {
     alignItems: 'center',
-    marginBottom: theme.spacing.xl,
+    marginBottom: 32,
+  },
+  profileImageContainer: {
+    position: 'relative',
+    marginBottom: 16,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: theme.spacing.md,
+    borderWidth: 4,
+    borderColor: '#FFFFFF',
   },
-  name: {
-    ...theme.typography.h2,
-    marginBottom: theme.spacing.xs,
+  editButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#059669',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
-  email: {
-    ...theme.typography.body,
-    color: colors.textLight,
+  userName: {
+    fontSize: 24,
+    fontFamily: 'Inter-Bold',
+    color: '#FFFFFF',
+    marginBottom: 4,
   },
-  subscriptionCard: {
-    backgroundColor: colors.card,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.lg,
-    marginBottom: theme.spacing.xl,
-    ...theme.shadows.small,
+  userEmail: {
+    fontSize: 16,
+    fontFamily: 'Inter-Regular',
+    color: '#FFFFFF',
+    opacity: 0.8,
   },
-  subscriptionTitle: {
-    ...theme.typography.h3,
-    marginBottom: theme.spacing.md,
-  },
-  subscriptionDetails: {
-    marginBottom: theme.spacing.md,
-  },
-  subscriptionItem: {
+  statsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+  },
+  statItem: {
     alignItems: 'center',
-    marginBottom: theme.spacing.sm,
   },
-  subscriptionLabel: {
-    ...theme.typography.body,
-    color: colors.textLight,
+  statValue: {
+    fontSize: 20,
+    fontFamily: 'Inter-Bold',
+    color: '#FFFFFF',
+    marginTop: 8,
+    marginBottom: 4,
   },
-  subscriptionValue: {
-    ...theme.typography.body,
-    fontWeight: '600',
-  },
-  statusBadge: {
-    backgroundColor: colors.primaryLight,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: theme.borderRadius.sm,
-  },
-  statusText: {
-    color: colors.primary,
-    fontWeight: '600',
+  statLabel: {
     fontSize: 14,
-  },
-  cancelButton: {
-    paddingVertical: theme.spacing.sm,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.error,
-    borderRadius: theme.borderRadius.md,
-  },
-  cancelButtonText: {
-    color: colors.error,
-    fontWeight: '600',
+    fontFamily: 'Inter-Regular',
+    color: '#FFFFFF',
+    opacity: 0.8,
   },
   section: {
-    marginBottom: theme.spacing.xl,
+    marginTop: 32,
+    marginBottom: 16,
   },
   sectionTitle: {
-    ...theme.typography.h3,
-    marginBottom: theme.spacing.md,
+    fontSize: 20,
+    fontFamily: 'Inter-SemiBold',
+    color: '#111827',
+    marginHorizontal: 20,
+    marginBottom: 16,
   },
-  menuCard: {
-    backgroundColor: colors.card,
-    borderRadius: theme.borderRadius.md,
-    overflow: 'hidden',
-    ...theme.shadows.small,
+  achievementCard: {
+    width: 140,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginLeft: 20,
+    alignItems: 'center',
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  achievementCardLocked: {
+    backgroundColor: '#F9FAFB',
+    opacity: 0.6,
+  },
+  achievementIcon: {
+    fontSize: 32,
+    marginBottom: 12,
+  },
+  achievementTitle: {
+    fontSize: 14,
+    fontFamily: 'Inter-SemiBold',
+    color: '#111827',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  achievementTitleLocked: {
+    color: '#9CA3AF',
+  },
+  achievementDescription: {
+    fontSize: 12,
+    fontFamily: 'Inter-Regular',
+    color: '#6B7280',
+    textAlign: 'center',
+    lineHeight: 16,
+  },
+  achievementDescriptionLocked: {
+    color: '#D1D5DB',
+  },
+  achievementBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#10B981',
+  },
+  menuContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: theme.spacing.md,
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
-  menuIconContainer: {
+  menuItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  menuIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.background,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: theme.spacing.md,
+    marginRight: 16,
   },
-  menuText: {
-    ...theme.typography.body,
-    flex: 1,
+  menuItemTitle: {
+    fontSize: 16,
+    fontFamily: 'Inter-Medium',
+    color: '#111827',
   },
-  divider: {
-    height: 1,
-    backgroundColor: colors.border,
+  menuItemRight: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingVertical: 16,
+    marginHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  logoutText: {
+    fontSize: 16,
+    fontFamily: 'Inter-SemiBold',
+    color: '#EF4444',
+    marginLeft: 8,
+  },
+  footer: {
+    alignItems: 'center',
+    paddingVertical: 32,
+  },
+  versionText: {
+    fontSize: 14,
+    fontFamily: 'Inter-Regular',
+    color: '#9CA3AF',
   },
 });

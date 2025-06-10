@@ -1,328 +1,461 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
-import { ArrowRight, Calendar, CircleCheck as CheckCircle } from 'lucide-react-native';
-import { colors } from '@/constants/colors';
-import { theme } from '@/constants/theme';
-import { Button } from '@/components/Button';
-import { useAuthStore } from '@/stores/auth-store';
-import { useSubscriptionStore } from '@/stores/subscription-store';
+import { LinearGradient } from 'expo-linear-gradient';
+import {
+  Calendar,
+  TrendingUp,
+  Target,
+  Award,
+  ChevronRight,
+  Flame,
+  Droplets,
+  Zap,
+} from 'lucide-react-native';
+
+const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
-  const user = useAuthStore((state) => state.user);
-  const subscription = useSubscriptionStore((state) => state.subscription);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  };
-
-  const getDaysLeft = (endDateString: string) => {
-    const endDate = new Date(endDateString);
-    const today = new Date();
-    const diffTime = endDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
+  const today = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Welcome back,</Text>
-          <Text style={styles.name}>{user?.name}</Text>
+          <Text style={styles.greeting}>Good morning!</Text>
+          <Text style={styles.date}>{today}</Text>
         </View>
-        <Image
-          source={{ uri: user?.profileImageUrl }}
-          style={styles.profileImage}
-          contentFit="cover"
-          web={{ fetchPriority: 'auto' }}
-        />
-      </View>
-
-      {subscription ? (
-        <View style={styles.subscriptionCard}>
-          <View style={styles.subscriptionHeader}>
-            <Text style={styles.subscriptionTitle}>Active Subscription</Text>
-            <View style={styles.subscriptionBadge}>
-              <Text style={styles.subscriptionBadgeText}>
-                {getDaysLeft(subscription.endDate)} days left
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.subscriptionDetails}>
-            <View style={styles.subscriptionItem}>
-              <Text style={styles.subscriptionLabel}>Plan:</Text>
-              <Text style={styles.subscriptionValue}>
-                {subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)}
-              </Text>
-            </View>
-            <View style={styles.subscriptionItem}>
-              <Text style={styles.subscriptionLabel}>Gym Access:</Text>
-              <Text style={styles.subscriptionValue}>
-                {subscription.includesGym ? 'Included' : 'Not Included'}
-              </Text>
-            </View>
-            <View style={styles.subscriptionItem}>
-              <Text style={styles.subscriptionLabel}>Valid Until:</Text>
-              <Text style={styles.subscriptionValue}>
-                {formatDate(subscription.endDate)}
-              </Text>
-            </View>
-          </View>
-
-          <Link href="/subscription" asChild>
-            <Button 
-              title="Manage Subscription" 
-              variant="outline" 
-              style={styles.manageButton}
-            />
-          </Link>
-        </View>
-      ) : (
-        <View style={styles.noSubscriptionCard}>
+        <TouchableOpacity style={styles.profileButton}>
           <Image
-            source={{ uri: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' }}
-            style={styles.noSubscriptionImage}
-            contentFit="cover"
-            web={{ fetchPriority: 'auto' }}
+            source={{
+              uri: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
+            }}
+            style={styles.profileImage}
           />
-          <Text style={styles.noSubscriptionTitle}>No Active Subscription</Text>
-          <Text style={styles.noSubscriptionText}>
-            Subscribe to healthy meal plans from top restaurants and get optional gym access.
-          </Text>
-          <Link href="/subscription" asChild>
-            <Button title="Get Started" style={styles.getStartedButton} />
-          </Link>
+        </TouchableOpacity>
+      </View>
+
+      {/* Daily Progress Card */}
+      <LinearGradient
+        colors={['#10B981', '#059669']}
+        style={styles.progressCard}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}>
+        <View style={styles.progressHeader}>
+          <Text style={styles.progressTitle}>Today's Progress</Text>
+          <Calendar size={20} color="#FFFFFF" />
         </View>
-      )}
+        <View style={styles.progressStats}>
+          <View style={styles.progressStat}>
+            <Flame size={24} color="#FFFFFF" />
+            <Text style={styles.progressValue}>1,847</Text>
+            <Text style={styles.progressLabel}>Calories</Text>
+          </View>
+          <View style={styles.progressStat}>
+            <Droplets size={24} color="#FFFFFF" />
+            <Text style={styles.progressValue}>2.1L</Text>
+            <Text style={styles.progressLabel}>Water</Text>
+          </View>
+          <View style={styles.progressStat}>
+            <Zap size={24} color="#FFFFFF" />
+            <Text style={styles.progressValue}>45min</Text>
+            <Text style={styles.progressLabel}>Exercise</Text>
+          </View>
+        </View>
+      </LinearGradient>
 
-      <View style={styles.sectionHeader}>
+      {/* Quick Actions */}
+      <View style={styles.section}>
         <Text style={styles.sectionTitle}>Quick Actions</Text>
+        <View style={styles.quickActions}>
+          <TouchableOpacity style={styles.actionCard}>
+            <LinearGradient
+              colors={['#F59E0B', '#D97706']}
+              style={styles.actionGradient}>
+              <Target size={24} color="#FFFFFF" />
+            </LinearGradient>
+            <Text style={styles.actionTitle}>Log Meal</Text>
+            <Text style={styles.actionSubtitle}>Track your nutrition</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionCard}>
+            <LinearGradient
+              colors={['#8B5CF6', '#7C3AED']}
+              style={styles.actionGradient}>
+              <TrendingUp size={24} color="#FFFFFF" />
+            </LinearGradient>
+            <Text style={styles.actionTitle}>Start Workout</Text>
+            <Text style={styles.actionSubtitle}>Begin your session</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
-      <View style={styles.quickActions}>
-        <Link href="/restaurants" asChild>
-          <TouchableOpacity style={styles.quickActionCard}>
-            <View style={[styles.quickActionIcon, { backgroundColor: colors.primaryLight }]}>
-              <Utensils size={24} color={colors.primary} />
-            </View>
-            <Text style={styles.quickActionTitle}>Browse Restaurants</Text>
-            <ArrowRight size={16} color={colors.textLight} />
+      {/* Recent Meals */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Recent Meals</Text>
+          <TouchableOpacity style={styles.seeAllButton}>
+            <Text style={styles.seeAllText}>See All</Text>
+            <ChevronRight size={16} color="#10B981" />
           </TouchableOpacity>
-        </Link>
-
-        <Link href="/gyms" asChild>
-          <TouchableOpacity style={styles.quickActionCard}>
-            <View style={[styles.quickActionIcon, { backgroundColor: colors.secondaryLight }]}>
-              <Dumbbell size={24} color={colors.secondary} />
+        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={styles.mealCard}>
+            <Image
+              source={{
+                uri: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400',
+              }}
+              style={styles.mealImage}
+            />
+            <View style={styles.mealInfo}>
+              <Text style={styles.mealName}>Avocado Toast</Text>
+              <Text style={styles.mealCalories}>320 cal</Text>
             </View>
-            <Text style={styles.quickActionTitle}>Explore Gyms</Text>
-            <ArrowRight size={16} color={colors.textLight} />
-          </TouchableOpacity>
-        </Link>
+          </View>
+          <View style={styles.mealCard}>
+            <Image
+              source={{
+                uri: 'https://images.pexels.com/photos/1059905/pexels-photo-1059905.jpeg?auto=compress&cs=tinysrgb&w=400',
+              }}
+              style={styles.mealImage}
+            />
+            <View style={styles.mealInfo}>
+              <Text style={styles.mealName}>Greek Salad</Text>
+              <Text style={styles.mealCalories}>280 cal</Text>
+            </View>
+          </View>
+          <View style={styles.mealCard}>
+            <Image
+              source={{
+                uri: 'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=400',
+              }}
+              style={styles.mealImage}
+            />
+            <View style={styles.mealInfo}>
+              <Text style={styles.mealName}>Grilled Salmon</Text>
+              <Text style={styles.mealCalories}>450 cal</Text>
+            </View>
+          </View>
+        </ScrollView>
       </View>
 
-      {subscription && subscription.meals.length > 0 && (
-        <>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Upcoming Meals</Text>
-            <Link href="/meals" asChild>
-              <TouchableOpacity>
-                <Text style={styles.seeAllText}>See All</Text>
-              </TouchableOpacity>
-            </Link>
+      {/* Weekly Goals */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Weekly Goals</Text>
+        <View style={styles.goalCard}>
+          <View style={styles.goalHeader}>
+            <Award size={20} color="#10B981" />
+            <Text style={styles.goalTitle}>Weight Loss Goal</Text>
           </View>
+          <View style={styles.goalProgress}>
+            <View style={styles.goalProgressBar}>
+              <View style={[styles.goalProgressFill, { width: '70%' }]} />
+            </View>
+            <Text style={styles.goalProgressText}>70% Complete</Text>
+          </View>
+          <Text style={styles.goalDescription}>
+            You're doing great! Keep up the momentum.
+          </Text>
+        </View>
+      </View>
 
-          <View style={styles.upcomingMeals}>
-            {subscription.meals.slice(0, 2).map((meal, index) => (
-              <View key={index} style={styles.mealCard}>
-                <View style={styles.mealDateContainer}>
-                  <Calendar size={16} color={colors.primary} />
-                  <Text style={styles.mealDate}>{formatDate(meal.date)}</Text>
-                </View>
-                <View style={styles.mealStatusContainer}>
-                  <CheckCircle size={16} color={colors.success} />
-                  <Text style={styles.mealStatus}>{meal.status}</Text>
-                </View>
-              </View>
-            ))}
+      {/* Recommended Recipes */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Recommended for You</Text>
+        <TouchableOpacity style={styles.recipeCard}>
+          <Image
+            source={{
+              uri: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400',
+            }}
+            style={styles.recipeImage}
+          />
+          <View style={styles.recipeInfo}>
+            <Text style={styles.recipeTitle}>Quinoa Buddha Bowl</Text>
+            <Text style={styles.recipeDescription}>
+              High-protein, nutrient-dense meal perfect for lunch
+            </Text>
+            <View style={styles.recipeStats}>
+              <Text style={styles.recipeStat}>25 min</Text>
+              <Text style={styles.recipeStat}>•</Text>
+              <Text style={styles.recipeStat}>420 cal</Text>
+              <Text style={styles.recipeStat}>•</Text>
+              <Text style={styles.recipeStat}>High Protein</Text>
+            </View>
           </View>
-        </>
-      )}
+          <ChevronRight size={20} color="#9CA3AF" />
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
 
-import { Utensils, Dumbbell } from 'lucide-react-native';
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    padding: theme.spacing.lg,
+    backgroundColor: '#F9FAFB',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.xl,
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 20,
   },
   greeting: {
-    ...theme.typography.body,
-    color: colors.textLight,
+    fontSize: 28,
+    fontFamily: 'Inter-Bold',
+    color: '#111827',
   },
-  name: {
-    ...theme.typography.h2,
+  date: {
+    fontSize: 16,
+    fontFamily: 'Inter-Regular',
+    color: '#6B7280',
+    marginTop: 4,
+  },
+  profileButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    overflow: 'hidden',
   },
   profileImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: '100%',
+    height: '100%',
   },
-  subscriptionCard: {
-    backgroundColor: colors.card,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing.lg,
-    marginBottom: theme.spacing.xl,
-    ...theme.shadows.medium,
+  progressCard: {
+    marginHorizontal: 20,
+    borderRadius: 20,
+    padding: 24,
+    marginBottom: 32,
   },
-  subscriptionHeader: {
+  progressHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
+    marginBottom: 20,
   },
-  subscriptionTitle: {
-    ...theme.typography.h3,
+  progressTitle: {
+    fontSize: 18,
+    fontFamily: 'Inter-SemiBold',
+    color: '#FFFFFF',
   },
-  subscriptionBadge: {
-    backgroundColor: colors.primaryLight,
-    paddingVertical: theme.spacing.xs,
-    paddingHorizontal: theme.spacing.sm,
-    borderRadius: theme.borderRadius.sm,
-  },
-  subscriptionBadgeText: {
-    color: colors.primary,
-    fontWeight: '600',
-    fontSize: 12,
-  },
-  subscriptionDetails: {
-    marginBottom: theme.spacing.lg,
-  },
-  subscriptionItem: {
+  progressStats: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing.sm,
   },
-  subscriptionLabel: {
-    ...theme.typography.body,
-    color: colors.textLight,
+  progressStat: {
+    alignItems: 'center',
   },
-  subscriptionValue: {
-    ...theme.typography.body,
-    fontWeight: '600',
+  progressValue: {
+    fontSize: 20,
+    fontFamily: 'Inter-Bold',
+    color: '#FFFFFF',
+    marginTop: 8,
   },
-  manageButton: {
-    marginTop: theme.spacing.sm,
+  progressLabel: {
+    fontSize: 14,
+    fontFamily: 'Inter-Regular',
+    color: '#FFFFFF',
+    opacity: 0.8,
+    marginTop: 4,
   },
-  noSubscriptionCard: {
-    backgroundColor: colors.card,
-    borderRadius: theme.borderRadius.lg,
-    overflow: 'hidden',
-    marginBottom: theme.spacing.xl,
-    ...theme.shadows.medium,
+  section: {
+    marginBottom: 32,
   },
-  noSubscriptionImage: {
-    width: '100%',
-    height: 160,
-  },
-  noSubscriptionTitle: {
-    ...theme.typography.h3,
-    margin: theme.spacing.lg,
-    marginBottom: theme.spacing.sm,
-  },
-  noSubscriptionText: {
-    ...theme.typography.body,
-    color: colors.textLight,
-    marginHorizontal: theme.spacing.lg,
-    marginBottom: theme.spacing.lg,
-  },
-  getStartedButton: {
-    margin: theme.spacing.lg,
+  sectionTitle: {
+    fontSize: 20,
+    fontFamily: 'Inter-SemiBold',
+    color: '#111827',
+    marginHorizontal: 20,
+    marginBottom: 16,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
+    marginHorizontal: 20,
+    marginBottom: 16,
   },
-  sectionTitle: {
-    ...theme.typography.h3,
-  },
-  seeAllText: {
-    ...theme.typography.bodySmall,
-    color: colors.primary,
-    fontWeight: '600',
-  },
-  quickActions: {
-    marginBottom: theme.spacing.xl,
-  },
-  quickActionCard: {
-    backgroundColor: colors.card,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.md,
+  seeAllButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
-    ...theme.shadows.small,
   },
-  quickActionIcon: {
+  seeAllText: {
+    fontSize: 14,
+    fontFamily: 'Inter-Medium',
+    color: '#10B981',
+    marginRight: 4,
+  },
+  quickActions: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    gap: 16,
+  },
+  actionCard: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  actionGradient: {
     width: 48,
     height: 48,
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: theme.spacing.md,
+    marginBottom: 12,
   },
-  quickActionTitle: {
-    ...theme.typography.body,
-    fontWeight: '600',
-    flex: 1,
+  actionTitle: {
+    fontSize: 16,
+    fontFamily: 'Inter-SemiBold',
+    color: '#111827',
+    marginBottom: 4,
   },
-  upcomingMeals: {
-    marginBottom: theme.spacing.xl,
+  actionSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Inter-Regular',
+    color: '#6B7280',
+    textAlign: 'center',
   },
   mealCard: {
-    backgroundColor: colors.card,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.md,
+    width: 140,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginLeft: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  mealImage: {
+    width: '100%',
+    height: 100,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  mealInfo: {
+    padding: 12,
+  },
+  mealName: {
+    fontSize: 14,
+    fontFamily: 'Inter-SemiBold',
+    color: '#111827',
+    marginBottom: 4,
+  },
+  mealCalories: {
+    fontSize: 12,
+    fontFamily: 'Inter-Regular',
+    color: '#6B7280',
+  },
+  goalCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    marginHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  goalHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
-    ...theme.shadows.small,
+    marginBottom: 16,
   },
-  mealDateContainer: {
+  goalTitle: {
+    fontSize: 16,
+    fontFamily: 'Inter-SemiBold',
+    color: '#111827',
+    marginLeft: 8,
+  },
+  goalProgress: {
+    marginBottom: 12,
+  },
+  goalProgressBar: {
+    height: 8,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+  goalProgressFill: {
+    height: '100%',
+    backgroundColor: '#10B981',
+    borderRadius: 4,
+  },
+  goalProgressText: {
+    fontSize: 14,
+    fontFamily: 'Inter-Medium',
+    color: '#10B981',
+  },
+  goalDescription: {
+    fontSize: 14,
+    fontFamily: 'Inter-Regular',
+    color: '#6B7280',
+    lineHeight: 20,
+  },
+  recipeCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  recipeImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 12,
+    marginRight: 16,
+  },
+  recipeInfo: {
+    flex: 1,
+  },
+  recipeTitle: {
+    fontSize: 16,
+    fontFamily: 'Inter-SemiBold',
+    color: '#111827',
+    marginBottom: 4,
+  },
+  recipeDescription: {
+    fontSize: 14,
+    fontFamily: 'Inter-Regular',
+    color: '#6B7280',
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  recipeStats: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  mealDate: {
-    ...theme.typography.body,
-    marginLeft: theme.spacing.xs,
-  },
-  mealStatusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  mealStatus: {
-    ...theme.typography.bodySmall,
-    color: colors.success,
-    marginLeft: theme.spacing.xs,
-    textTransform: 'capitalize',
+  recipeStat: {
+    fontSize: 12,
+    fontFamily: 'Inter-Regular',
+    color: '#9CA3AF',
+    marginRight: 8,
   },
 });

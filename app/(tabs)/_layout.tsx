@@ -1,57 +1,61 @@
-import React from 'react';
 import { Tabs } from 'expo-router';
-import { Home, Utensils, Dumbbell, User } from 'lucide-react-native';
-import { colors } from '@/constants/colors';
+import { Home, Utensils, Activity, User } from 'lucide-react-native';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textLight,
+        headerShown: false,
+        tabBarActiveTintColor: '#10B981',
+        tabBarInactiveTintColor: '#6B7280',
         tabBarStyle: {
-          borderTopColor: colors.border,
+          backgroundColor: '#FFFFFF',
+          borderTopWidth: 1,
+          borderTopColor: '#F3F4F6',
+          paddingTop: 8,
+          paddingBottom: 8,
+          height: 80,
         },
         tabBarLabelStyle: {
+          fontFamily: 'Inter-Medium',
           fontSize: 12,
-          fontWeight: '500',
+          marginTop: 4,
         },
-        headerStyle: {
-          backgroundColor: colors.background,
-        },
-        headerTintColor: colors.text,
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-        headerShadowVisible: false,
-      }}
-    >
+      }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
+          tabBarIcon: ({ size, color }) => (
+            <Home size={size} color={color} strokeWidth={2} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="restaurants"
+        name="nutrition"
         options={{
-          title: 'Restaurants',
-          tabBarIcon: ({ color, size }) => <Utensils size={size} color={color} />,
+          title: 'Nutrition',
+          tabBarIcon: ({ size, color }) => (
+            <Utensils size={size} color={color} strokeWidth={2} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="gyms"
+        name="fitness"
         options={{
-          title: 'Gyms',
-          tabBarIcon: ({ color, size }) => <Dumbbell size={size} color={color} />,
+          title: 'Fitness',
+          tabBarIcon: ({ size, color }) => (
+            <Activity size={size} color={color} strokeWidth={2} />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
+          tabBarIcon: ({ size, color }) => (
+            <User size={size} color={color} strokeWidth={2} />
+          ),
         }}
       />
     </Tabs>
