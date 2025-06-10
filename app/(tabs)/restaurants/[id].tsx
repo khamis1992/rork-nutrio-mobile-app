@@ -61,7 +61,7 @@ export default function RestaurantDetailsScreen() {
           source={{ uri: restaurant.imageUrl }}
           style={styles.image}
           contentFit="cover"
-          web={{ fetchPriority: 'auto' }}
+          web={{ fetchpriority: 'auto' }}
         />
         
         <View style={styles.detailsContainer}>
