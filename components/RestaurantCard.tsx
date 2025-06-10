@@ -24,7 +24,7 @@ export function RestaurantCard({ restaurant, onPress, style }: RestaurantCardPro
         style={styles.image}
         contentFit="cover"
         transition={200}
-        web={{ fetchPriority: 'auto' }}
+        web={{ fetchpriority: 'auto' }}
       />
       <View style={styles.content}>
         <Text style={styles.name}>{restaurant.name}</Text>

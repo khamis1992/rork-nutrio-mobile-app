@@ -49,7 +49,7 @@ export default function ProfileScreen() {
           source={{ uri: user?.profileImageUrl }}
           style={styles.profileImage}
           contentFit="cover"
-          web={{ fetchPriority: 'auto' }}
+          web={{ fetchpriority: 'auto' }}
         />
         <Text style={styles.name}>{user?.name}</Text>
         <Text style={styles.email}>{user?.email}</Text>
