@@ -32,6 +32,7 @@ export function GymCard({
         style={styles.image}
         contentFit="cover"
         transition={200}
+        web={{ fetchpriority: 'auto' }}
       />
       {hasAccess && (
         <View style={styles.badge}>
