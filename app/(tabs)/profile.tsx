@@ -2,15 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { 
-  User, 
-  CreditCard, 
-  Calendar, 
-  Bell, 
-  HelpCircle, 
-  LogOut,
-  ChevronRight
-} from 'lucide-react-native';
+import { User, CreditCard, Calendar, Bell, CircleHelp as HelpCircle, LogOut, ChevronRight } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 import { theme } from '@/constants/theme';
 import { useAuthStore } from '@/stores/auth-store';
