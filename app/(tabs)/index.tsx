@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-import { ArrowRight, Calendar, CheckCircle } from 'lucide-react-native';
+import { ArrowRight, Calendar, CircleCheck as CheckCircle } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 import { theme } from '@/constants/theme';
 import { Button } from '@/components/Button';
