@@ -1,7 +1,20 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
-export function useNutritionSummary(userId: string) {
+export async function logMeal(userId: string, mealId: string, mealTime: string = 'lunch') {
+  const today = new Date().toISOString().slice(0, 10);
+  const { error } = await supabase.from('user_nutrition_log').insert([
+    {
+      user_id: userId,
+      meal_id: mealId,
+      date: today,
+      meal_time: mealTime,
+    },
+  ]);
+  return { error };
+}
+
+export function useNutritionSummary(userId: string, date?: Date) {
   const [summary, setSummary] = useState({ calories: 0, protein: 0, carbs: 0, fats: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -9,31 +22,34 @@ export function useNutritionSummary(userId: string) {
   useEffect(() => {
     if (!userId) return;
     setLoading(true);
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const targetDate = (date ? date : new Date()).toISOString().slice(0, 10); // YYYY-MM-DD
     supabase
       .from('user_nutrition_log')
-      .select('calories, protein, carbs, fats')
+      .select('meal:meals(calories, protein, carbs, fats)')
       .eq('user_id', userId)
-      .eq('date', today)
+      .eq('date', targetDate)
       .then(({ data, error }) => {
         if (error) {
           setError(error.message);
           setSummary({ calories: 0, protein: 0, carbs: 0, fats: 0 });
         } else {
           const totals = (data || []).reduce(
-            (acc, entry) => ({
-              calories: acc.calories + (entry.calories || 0),
-              protein: acc.protein + (entry.protein || 0),
-              carbs: acc.carbs + (entry.carbs || 0),
-              fats: acc.fats + (entry.fats || 0),
-            }),
+            (acc, entry) => {
+              const meal = entry.meal || {};
+              return {
+                calories: acc.calories + (meal.calories || 0),
+                protein: acc.protein + (meal.protein || 0),
+                carbs: acc.carbs + (meal.carbs || 0),
+                fats: acc.fats + (meal.fats || 0),
+              };
+            },
             { calories: 0, protein: 0, carbs: 0, fats: 0 }
           );
           setSummary(totals);
         }
         setLoading(false);
       });
-  }, [userId]);
+  }, [userId, date]);
 
   return { ...summary, loading, error };
 } 
