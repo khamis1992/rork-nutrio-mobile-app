@@ -7,8 +7,9 @@ import { useRecommendedMeals } from '@/hooks/useRecommendedMeals';
 import { useNutritionSummary } from '@/hooks/useNutritionSummary';
 import { useFeaturedRestaurants } from '@/hooks/useFeaturedRestaurants';
 import { HomeScreen } from '@/components/rork/Home';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
+import * as Notifications from 'expo-notifications';
 
 type MealFilter = 'all' | 'vegan' | 'chef' | 'menu' | 'fitness';
 
@@ -19,6 +20,7 @@ const HomeScreenWrapper: React.FC = () => {
   const [subLoading, setSubLoading] = useState(true);
   const [subError, setSubError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<MealFilter>('all');
+  const scheduledRef = useRef(false);
 
   const { meals, loading: mealsLoading, error: mealsError } = useRecommendedMeals(user?.id || '', activeFilter);
   const { calories, protein, carbs, fats, loading: nutritionLoading } = useNutritionSummary(user?.id || '');
@@ -35,6 +37,32 @@ const HomeScreenWrapper: React.FC = () => {
       .catch((err) => setSubError(err.message))
       .finally(() => setSubLoading(false));
   }, [user?.id]);
+
+  useEffect(() => {
+    if (subscription && !scheduledRef.current) {
+      scheduledRef.current = true;
+      const mealtimes = [8, 12, 18]; // 8 AM, 12 PM, 6 PM
+      mealtimes.forEach((hour) => {
+        const now = new Date();
+        const scheduled = new Date();
+        scheduled.setHours(hour, 0, 0, 0);
+        if (scheduled < now) {
+          scheduled.setDate(scheduled.getDate() + 1); // schedule for next day if time has passed
+        }
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Meal Reminder',
+            body: `It's time for your meal!`,
+          },
+          trigger: {
+            hour: scheduled.getHours(),
+            minute: scheduled.getMinutes(),
+            repeats: true,
+          },
+        });
+      });
+    }
+  }, [subscription]);
 
   const onStartPlan = useCallback(() => {
     navigation.navigate('Subscription');
