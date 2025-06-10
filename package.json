@@ -53,7 +53,7 @@
     "@babel/core": "^7.25.2",
     "@expo/cli": "^0.22.3",
     "@expo/ngrok": "^4.1.0",
-    "@types/react": "~19.0.10",
+    "@types/react": "~18.2.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "typescript": "~5.8.3"
   },
