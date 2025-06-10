@@ -3,9 +3,9 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "npx rork start -p xsv7r658lr85atmrwf6ff --tunnel",
-    "start-web": "npx rork start -p xsv7r658lr85atmrwf6ff --web --tunnel",
-    "start-web-dev": "DEBUG=expo* npx rork start -p xsv7r658lr85atmrwf6ff --web --tunnel",
+    "start": "EXPO_PUBLIC_RORK_API_BASE_URL=https://rork.com npx rork start -p xsv7r658lr85atmrwf6ff --tunnel",
+    "start-web": "EXPO_PUBLIC_RORK_API_BASE_URL=https://rork.com npx rork start -p xsv7r658lr85atmrwf6ff --web --tunnel",
+    "start-web-dev": "EXPO_PUBLIC_RORK_API_BASE_URL=https://rork.com DEBUG=expo* npx rork start -p xsv7r658lr85atmrwf6ff --web --tunnel",
     "dev": "npm run start-web"
   },
   "dependencies": {
