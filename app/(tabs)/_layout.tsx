@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Home, Utensils, Dumbbell, User, ShoppingBag } from 'lucide-react-native';
+import { Home, Utensils, Dumbbell, User } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 
 export default function TabLayout() {
@@ -30,28 +30,20 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          headerShown: false,
           tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="restaurants"
         options={{
-          title: 'Explore',
+          title: 'Restaurants',
           tabBarIcon: ({ color, size }) => <Utensils size={size} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="subscription"
-        options={{
-          title: 'My Plan',
-          tabBarIcon: ({ color, size }) => <ShoppingBag size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="gyms"
         options={{
-          title: 'Fitness',
+          title: 'Gyms',
           tabBarIcon: ({ color, size }) => <Dumbbell size={size} color={color} />,
         }}
       />

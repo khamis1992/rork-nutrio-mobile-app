@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Link, useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { Button } from '@/components/Button';
 import { colors } from '@/constants/colors';
 import { theme } from '@/constants/theme';
@@ -9,17 +9,10 @@ import { useAuthStore } from '@/stores/auth-store';
 
 export default function WelcomeScreen() {
   const { login } = useAuthStore();
-  const router = useRouter();
 
   const handleGuestLogin = async () => {
-    try {
-      // Set a guest user without requiring credentials
-      await login('guest@example.com', 'guestpassword', true);
-      // Force navigation to home page after guest login
-      router.replace("/(tabs)");
-    } catch (error) {
-      console.error('Guest login failed:', error);
-    }
+    // Set a guest user without requiring credentials
+    await login('guest@example.com', 'guestpassword', true);
   };
 
   return (
@@ -59,25 +52,22 @@ export default function WelcomeScreen() {
       </View>
       
       <View style={styles.buttonContainer}>
-        <Button 
-          title="Continue as Guest" 
-          onPress={handleGuestLogin}
-          style={styles.guestButton} 
-        />
         <Link href="/(auth)/login" asChild>
-          <Button 
-            title="Login" 
-            variant="outline"
-            style={styles.button} 
-          />
+          <Button title="Login" style={styles.button} />
         </Link>
         <Link href="/(auth)/signup" asChild>
           <Button 
             title="Create Account" 
-            variant="text" 
+            variant="outline" 
             style={styles.button} 
           />
         </Link>
+        <Button 
+          title="Continue as Guest" 
+          variant="text" 
+          onPress={handleGuestLogin}
+          style={styles.guestButton} 
+        />
       </View>
     </SafeAreaView>
   );
@@ -159,9 +149,9 @@ const styles = StyleSheet.create({
     paddingBottom: theme.spacing.xl,
   },
   button: {
-    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.md,
   },
   guestButton: {
-    backgroundColor: colors.primary,
+    marginTop: theme.spacing.xs,
   },
 });

@@ -1,12 +1,12 @@
 export const colors = {
-  primary: '#00C853',
-  primaryLight: '#E8F5E9',
-  primaryDark: '#009624',
-  secondary: '#FF9800',
+  primary: '#4CAF50',
+  primaryLight: '#A5D6A7',
+  primaryDark: '#2E7D32',
+  secondary: '#FFA000',
   secondaryLight: '#FFECB3',
-  background: '#ffffff',
-  card: '#FFFFFF',
-  text: '#212121',
+  background: '#FFFFFF',
+  card: '#F9F9F9',
+  text: '#333333',
   textLight: '#757575',
   border: '#E0E0E0',
   error: '#D32F2F',
@@ -15,18 +15,4 @@ export const colors = {
   black: '#000000',
   transparent: 'transparent',
   overlay: 'rgba(0, 0, 0, 0.5)',
-  tagBackground: {
-    keto: '#E0F7FA',
-    vegan: '#E8F5E9',
-    highProtein: '#F1F8E9',
-    lowFat: '#FFF3E0',
-    glutenFree: '#F3E5F5',
-  },
-  tagText: {
-    keto: '#00ACC1',
-    vegan: '#43A047',
-    highProtein: '#7CB342',
-    lowFat: '#FF9800',
-    glutenFree: '#8E24AA',
-  }
 };
