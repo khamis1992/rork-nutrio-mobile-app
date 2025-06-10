@@ -45,6 +45,7 @@
     "react-native-screens": "~3.31.1",
     "react-native-svg": "15.11.2",
     "react-native-web": "~0.19.10",
+    "rork": "^1.0.1",
     "superjson": "^2.2.2",
     "zod": "^3.25.56",
     "zustand": "^5.0.2"
